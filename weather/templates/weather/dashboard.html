@@ -1,0 +1,103 @@
+{% extends 'weather_app/base.html' %}
+
+{% block title %}Weather Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Current Weather Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for data in latest_data %}
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                        {% if data.condition == 'Clear' %}
+                        <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/>
+                        </svg>
+                        {% elif data.condition == 'Rain' %}
+                        <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M20 16.2A4.5 4.5 0 0019 8h-1.8A7 7 0 104 14.9"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M16 14v6M8 14v6M12 16v6"/>
+                        </svg>
+                        {% else %}
+                        <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                {{ data.city }}
+                            </dt>
+                            <dd class="flex items-baseline">
+                                <div class="text-2xl font-semibold text-gray-900">
+                                    {{ data.temperature }}°C
+                                </div>
+                                <div class="ml-2 flex items-baseline text-sm font-semibold text-gray-600">
+                                    {{ data.condition }}
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-4 sm:px-6">
+                <div class="text-sm">
+                    <span class="text-gray-500">Last updated:</span>
+                    <span class="font-medium text-gray-900">{{ data.timestamp|date:"g:i A" }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Temperature Trend Graph -->
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-lg font-medium text-gray-900 mb-4">Temperature Trends</h2>
+        <div class="h-96">
+            {{ temperature_graph|safe }}
+        </div>
+    </div>
+
+    <!-- Active Alerts Section -->
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-lg font-medium text-gray-900 mb-4">Active Alerts</h2>
+        {% if active_alerts %}
+        <div class="space-y-4">
+            {% for alert in active_alerts %}
+            <div class="rounded-md bg-yellow-50 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" 
+                                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" 
+                                  clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-yellow-800">
+                            Alert for {{ alert.city.name }}
+                        </h3>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>{{ alert.message }}</p>
+                        </div>
+                        <div class="mt-1 text-xs text-yellow-500">
+                            Triggered at {{ alert.timestamp|date:"g:i A" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-500">No active alerts at this time.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

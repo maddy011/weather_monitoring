@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "weather-monitoring"
+version = "0.1.0"
+description = ""
+authors = ["Madhana Bala S.K <madhanabala.sk@supporthive.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "4.2"
+celery = "5.3.6"
+django-celery-beat = "2.5.0"
+django-celery-results = "2.5.1"
+redis = "5.0.1"
+plotly = "5.18.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
